@@ -19,7 +19,7 @@ export default class MenuScene extends Phaser.Scene {
      */
     create() {
         // Titolo
-        this.add.text(400, 140, 'Il Mio Gioco', {
+        this.add.text(400, 140, 'Simon', {
             fontSize: '48px',
             color: '#ffffff',
             fontFamily: 'Arial'
