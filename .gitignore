@@ -1,0 +1,47 @@
+### Node ###
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+pnpm-lock.yaml
+
+### Vite / build ###
+dist/
+/.vite/
+/.turbo/
+/.parcel-cache/
+
+### TypeScript ###
+*.tsbuildinfo
+
+### Env files ###
+.env
+.env.*
+
+### MacOS ###
+.DS_Store
+
+### Logs ###
+logs/
+*.log
+
+### IDEs / Editors ###
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+### Misc ###
+/.cache/
+coverage/
+coverage-final.json
+nyc_output/
+
+### Audio / assets built files (optional) ###
+# If you keep large generated audio assets in version control, adjust as needed
+/assets/audio/*.wav
+/assets/audio/*.mp3
+
+# End of file
