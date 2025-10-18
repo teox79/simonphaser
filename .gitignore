@@ -45,3 +45,5 @@ nyc_output/
 /assets/audio/*.mp3
 
 # End of file
+*storybook.log
+storybook-static
