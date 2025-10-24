@@ -1,7 +1,7 @@
 
 import Phaser from 'phaser'
 import Badge from '../stories/Badge/BadgePhaser'
-import { lucideSparkles } from '../stories/Badge/lucideIcons'
+import { lucideSparkles } from '../stories/IconPhaser/lucideIcons'
 
 export default class MenuScene extends Phaser.Scene {
     constructor() {
@@ -25,9 +25,6 @@ export default class MenuScene extends Phaser.Scene {
         // Badge sopra il titolo
         const badgeY = 90;
         const badgeIconKey = 'icon-sparkles';
-        if (!this.textures.exists(badgeIconKey)) {
-            await Badge.addSvgTexture(this, badgeIconKey, lucideSparkles, '#22d3ee');
-        }
         new Badge({
             scene: this,
             x: 400,
@@ -35,6 +32,7 @@ export default class MenuScene extends Phaser.Scene {
             text: 'Sfida la tua memoria!',
             variant: 'default',
             iconKey: badgeIconKey,
+            iconSvg: lucideSparkles,
             iconSize: 18
         });
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Phaser from 'phaser';
 import { Badge, BadgeConfig } from './BadgePhaser';
-import { lucideSparkles } from './lucideIcons';
+import { lucideSparkles } from '../IconPhaser/lucideIcons';
 export const DefaultWithSparkles: Story = {
   args: {
     text: 'Sfida la tua memoria!',
@@ -46,9 +46,6 @@ const meta = {
       scene: {
         create: async function() {
           if (args.iconSvg && iconKey) {
-            if (!this.textures.exists(iconKey)) {
-              await Badge.addSvgTexture(this, iconKey, args.iconSvg);
-            }
             new Badge({
               scene: this,
               x: 200,
@@ -56,6 +53,7 @@ const meta = {
               text: args.text ?? 'OK',
               variant: args.variant ?? 'default',
               iconKey,
+              iconSvg: args.iconSvg,
               iconSize: args.iconSize ?? 16,
             });
           } else {

@@ -1,5 +1,7 @@
+
 import Phaser from "phaser";
 import { theme } from "../../components/theme";
+import IconPhaser from '../IconPhaser/IconPhaser';
 
 export type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
 
@@ -65,7 +67,23 @@ export class Badge extends Phaser.GameObjects.Container {
     });
     this.label.setOrigin(0.5, 0.5);
 
-    if (cfg.iconKey) {
+
+    if (cfg.iconKey && cfg.iconSvg) {
+      // Usa IconPhaser per gestire svg e texture
+      IconPhaser.create({
+        scene: cfg.scene,
+        x: 0,
+        y: 0,
+        svg: cfg.iconSvg,
+        key: cfg.iconKey,
+        color: getVariantStyles()[this.variant].text,
+        size: this.iconSize
+      }).then(icon => {
+        this.icon = icon;
+        this.add(this.icon);
+        this.draw();
+      });
+    } else if (cfg.iconKey) {
       this.icon = cfg.scene.add.image(0, 0, cfg.iconKey);
       this.icon.setDisplaySize(this.iconSize, this.iconSize);
       this.icon.setOrigin(0.5, 0.5);
@@ -167,39 +185,7 @@ export class Badge extends Phaser.GameObjects.Container {
     this.draw();
   }
 
-  public static async addSvgTexture(
-    scene: Phaser.Scene,
-    key: string,
-    svgString: string,
-    color: string = '#22d3ee' // cyan-400 default
-  ) {
-    // Convert SVG string to data URL and load as texture via HTML Image element
-    // Replace 'currentColor' with the specified color for Phaser compatibility
-    const processedSvg = svgString.replace(/currentColor/g, color);
-    
-    try {
-      // Use encodeURIComponent instead of base64 for better SVG support
-      const svgData = encodeURIComponent(processedSvg);
-      const dataUrl = `data:image/svg+xml,${svgData}`;
-      
-      // Create an Image element and load the SVG
-      const img = new Image();
-      img.src = dataUrl;
-      
-      // Wait for the image to load
-      await new Promise<void>((resolve, reject) => {
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error('Failed to load SVG image'));
-      });
-      
-      // Add the loaded image as a texture to Phaser
-      scene.textures.addImage(key, img);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn("Failed to add SVG texture", e);
-      throw e;
-    }
-  }
+  // addSvgTexture deprecato: usa IconPhaser.addSvgTexture
 }
 
 export default Badge;
