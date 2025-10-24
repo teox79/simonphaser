@@ -112,7 +112,7 @@ export const Outline: Story = {
 };
 
 export const Secondary: Story = {
-  args: { text: 'Secondary', variant: 'secondary', size: 'default' },
+  args: { text: "pi", variant: 'secondary', size: 'default' },
 };
 
 export const Ghost: Story = {
