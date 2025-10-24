@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { theme } from '../../components/theme';
 
 // Definizione delle varianti del bottone (convertito da CVA)
 export type ButtonVariant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
@@ -15,85 +16,85 @@ export interface ButtonConfig {
   onClick?: () => void;
 }
 
-// Configurazione colori per le varianti (convertito da Tailwind CSS)
-const variantStyles = {
+// Configurazione colori per le varianti usando il design system
+const getVariantStyles = () => ({
   default: {
-    background: 0x0f172a, // primary
-    backgroundHover: 0x1e293b,
-    text: '#f8fafc', // primary-foreground
-    border: 0x0f172a,
-    borderFocus: 0x94a3b8,
+    background: theme.colors.primary(),
+    backgroundHover: theme.isDark() ? 0x666666 : 0x1a1a1a,
+    text: theme.cssColors.primaryForeground(),
+    border: theme.colors.primary(),
+    borderFocus: theme.colors.ring(),
     underline: false,
   },
   destructive: {
-    background: 0xef4444, // destructive red
-    backgroundHover: 0xdc2626,
-    text: '#ffffff',
-    border: 0xef4444,
-    borderFocus: 0xfca5a5,
+    background: theme.colors.destructive(),
+    backgroundHover: theme.isDark() ? 0xdc2626 : 0xb91c1c,
+    text: theme.cssColors.destructiveForeground(),
+    border: theme.colors.destructive(),
+    borderFocus: theme.colors.destructive(),
     underline: false,
   },
   outline: {
-    background: 0xffffff, // bg-background
-    backgroundHover: 0xf1f5f9, // accent
-    text: '#0f172a', // foreground
-    border: 0xe2e8f0, // border
-    borderFocus: 0x94a3b8,
+    background: theme.colors.background(),
+    backgroundHover: theme.colors.accent(),
+    text: theme.cssColors.foreground(),
+    border: theme.colors.border(),
+    borderFocus: theme.colors.ring(),
     underline: false,
   },
   secondary: {
-    background: 0xf1f5f9, // secondary
-    backgroundHover: 0xe2e8f0,
-    text: '#0f172a', // secondary-foreground
-    border: 0xf1f5f9,
-    borderFocus: 0x94a3b8,
+    background: theme.colors.secondary(),
+    backgroundHover: theme.isDark() ? 0x555555 : 0xdddde1,
+    text: theme.cssColors.secondaryForeground(),
+    border: theme.colors.secondary(),
+    borderFocus: theme.colors.ring(),
     underline: false,
   },
   ghost: {
     background: 0x00000000, // transparent
-    backgroundHover: 0xf1f5f9, // accent
-    text: '#0f172a', // foreground
+    backgroundHover: theme.colors.accent(),
+    text: theme.cssColors.foreground(),
     border: 0x00000000, // transparent
-    borderFocus: 0x94a3b8,
+    borderFocus: theme.colors.ring(),
     underline: false,
   },
   link: {
     background: 0x00000000, // transparent
     backgroundHover: 0x00000000,
-    text: '#0f172a', // primary
+    text: theme.cssColors.primary(),
     border: 0x00000000,
-    borderFocus: 0x94a3b8,
+    borderFocus: theme.colors.ring(),
     underline: true,
   },
-};
+});
 
-// Configurazione dimensioni
-const sizeStyles = {
+// Configurazione dimensioni usando il border radius del tema
+const getSizeStyles = () => ({
   sm: {
     height: 32, // h-8
     paddingX: 12, // px-3
     fontSize: '14px',
-    borderRadius: 6, // rounded-md
+    borderRadius: theme.radius.sm(),
   },
   default: {
     height: 36, // h-9
     paddingX: 16, // px-4
     fontSize: '14px',
-    borderRadius: 6, // rounded-md
+    borderRadius: theme.radius.md(),
   },
   lg: {
     height: 40, // h-10
     paddingX: 24, // px-6
     fontSize: '16px',
-    borderRadius: 6, // rounded-md
+    borderRadius: theme.radius.lg(),
   },
   icon: {
     height: 36, // size-9
     paddingX: 36, // quadrato
     fontSize: '16px',
-    borderRadius: 6, // rounded-md
+    borderRadius: theme.radius.md(),
   },
-};
+});
 
 /**
  * Componente Button riutilizzabile per Phaser
@@ -123,6 +124,10 @@ export class Button extends Phaser.GameObjects.Container {
     this.disabled = config.disabled ?? false;
     this.onClick = config.onClick ?? (() => {});
 
+    // Ottieni gli stili dal tema
+    const variantStyles = getVariantStyles();
+    const sizeStyles = getSizeStyles();
+    
     const variantStyle = variantStyles[this.variant];
     const sizeStyle = sizeStyles[this.size];
 
@@ -204,6 +209,10 @@ export class Button extends Phaser.GameObjects.Container {
   }
 
   private draw(width: number, height: number): void {
+    // Ottieni gli stili dal tema (per supportare cambi di tema dinamici)
+    const variantStyles = getVariantStyles();
+    const sizeStyles = getSizeStyles();
+    
     const variantStyle = variantStyles[this.variant];
     const sizeStyle = sizeStyles[this.size];
 
@@ -213,9 +222,9 @@ export class Button extends Phaser.GameObjects.Container {
     this.focusRing.clear();
     if (this.underline) this.underline.clear();
 
-    // Colore di sfondo (con hover)
-    const bgColor = this.isHovered ? variantStyle.backgroundHover : variantStyle.background;
-    
+    // Colore di sfondo (con hover) - usa il colore predefinito dall'hover
+    let bgColor = this.isHovered ? variantStyle.backgroundHover : variantStyle.background;
+
     // Disegna focus ring se focused
     if (this.isFocused) {
       this.focusRing.lineStyle(3, variantStyle.borderFocus, 0.5);
