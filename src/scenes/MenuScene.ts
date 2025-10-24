@@ -1,4 +1,7 @@
+
 import Phaser from 'phaser'
+import Badge from '../stories/Badge/BadgePhaser'
+import { lucideSparkles } from '../stories/Badge/lucideIcons'
 
 export default class MenuScene extends Phaser.Scene {
     constructor() {
@@ -17,7 +20,24 @@ export default class MenuScene extends Phaser.Scene {
      * - hitRect (alpha = 0): è la zona cliccabile; così il testo non deve essere reso interattivo separatamente.
      * - Gli handler pointerover/pointerout/pointerdown sono collegati alla hit-area.
      */
-    create() {
+
+    async create() {
+        // Badge sopra il titolo
+        const badgeY = 90;
+        const badgeIconKey = 'icon-sparkles';
+        if (!this.textures.exists(badgeIconKey)) {
+            await Badge.addSvgTexture(this, badgeIconKey, lucideSparkles, '#22d3ee');
+        }
+        new Badge({
+            scene: this,
+            x: 400,
+            y: badgeY,
+            text: 'Sfida la tua memoria!',
+            variant: 'default',
+            iconKey: badgeIconKey,
+            iconSize: 18
+        });
+
         // Titolo
         this.add.text(400, 140, 'Simon', {
             fontSize: '48px',
